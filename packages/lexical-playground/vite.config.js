@@ -172,6 +172,9 @@ export default defineConfig({
   },
   build: {
     outDir: 'build',
+    sourcemap: true,
+    minify: false,
+    watch: {},
     rollupOptions: {
       input: {
         main: new URL('./index.html', import.meta.url).pathname,
