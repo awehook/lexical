@@ -312,6 +312,7 @@ function handleDEVOnlyPendingUpdateGuarantees(
 }
 
 export function commitPendingUpdates(editor: LexicalEditor): void {
+  console.log('commitPendingUpdates');
   const pendingEditorState = editor._pendingEditorState;
   const rootElement = editor._rootElement;
   if (rootElement === null || pendingEditorState === null) {
