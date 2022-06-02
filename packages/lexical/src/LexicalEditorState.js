@@ -38,6 +38,7 @@ export function editorStateHasDirtySelection(
   editorState: EditorState,
   editor: LexicalEditor,
 ): boolean {
+  console.warn('editorStateHasDirtySelection',editorState === editor.getEditorState())
   const currentSelection = editor.getEditorState()._selection;
   const pendingSelection = editorState._selection;
   // Check if we need to update because of changes in selection

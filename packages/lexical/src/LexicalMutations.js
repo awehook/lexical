@@ -82,6 +82,7 @@ function handleTextMutation(
   node: TextNode,
   editor: LexicalEditor,
 ): void {
+  console.error('handleTextMutation')
   const domSelection = getDOMSelection();
   let anchorOffset = null;
   let focusOffset = null;
@@ -99,6 +100,7 @@ export function $flushMutations(
   observer: MutationObserver,
 ): void {
   isProcessingMutations = true;
+  console.warn('$flushMutations isProcessingMutations',isProcessingMutations)
   const shouldFlushTextMutations =
     performance.now() - lastTextEntryTimeStamp > TEXT_MUTATION_VARIANCE;
   try {
@@ -140,6 +142,7 @@ export function $flushMutations(
             );
           }
         } else if (type === 'childList') {
+          console.error('$flushMutations childList')
           shouldRevertSelection = true;
           // We attempt to "undo" any changes that have occurred outside
           // of Lexical. We want Lexical's editor state to be source of truth.
@@ -268,6 +271,7 @@ export function $flushMutations(
 }
 
 export function flushRootMutations(editor: LexicalEditor): void {
+  console.warn('flushRootMutations')
   const observer = editor._observer;
   if (observer !== null) {
     const mutations = observer.takeRecords();
@@ -279,6 +283,7 @@ export function initMutationObserver(editor: LexicalEditor): void {
   initTextEntryListener();
   editor._observer = new MutationObserver(
     (mutations: Array<MutationRecord>, observer: MutationObserver) => {
+      console.log('MutationObserver call $flushMutations')
       $flushMutations(editor, mutations, observer);
     },
   );

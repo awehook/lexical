@@ -400,6 +400,7 @@ export function internalGetRoot(editorState: EditorState): RootNode {
 export function $setSelection(
   selection: null | RangeSelection | NodeSelection | GridSelection,
 ): void {
+  console.error('$setSelection')
   const editorState = getActiveEditorState();
   if (__DEV__ && selection !== null && Object.isFrozen(selection)) {
     console.warn(
@@ -998,5 +999,12 @@ export function dispatchCommand<P>(
   type: LexicalCommand<P>,
   payload?: P,
 ): boolean {
+  console.error('dispatchCommand',type.type, editor,payload)
+  if(type.type === 'click') {
+    console.error('============================================================================================')
+  }
+  // if(type.type !== 'selection_change') {
+  //   console.trace('dispatchCommand',editor,type,payload)
+  // }
   return triggerCommandListeners(editor, type, payload);
 }

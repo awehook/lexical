@@ -52,6 +52,10 @@ import {
   setMutatedNode,
 } from './LexicalUtils';
 
+const log = (...args) => {
+  console.log('LexicalReconciler',...args)
+}
+
 let subTreeTextContent = '';
 let subTreeDirectionedTextContent = '';
 let editorTextContent = '';
@@ -714,6 +718,7 @@ export function updateEditorState(
     const dirtyElements = editor._dirtyElements;
     const dirtyLeaves = editor._dirtyLeaves;
 
+    console.trace('observer.disconnect')
     observer.disconnect();
     try {
       reconcileMutatedNodes = reconcileRoot(
@@ -725,6 +730,7 @@ export function updateEditorState(
         dirtyLeaves,
       );
     } finally {
+      log('observer.observe', rootElement)
       observer.observe(rootElement, {
         characterData: true,
         childList: true,

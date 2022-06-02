@@ -232,6 +232,7 @@ function $canRemoveText(
 }
 
 function onBeforeInput(event: InputEvent, editor: LexicalEditor): void {
+  console.warn('onBeforeInput')
   const inputType = event.inputType;
 
   // We let the browser do its own thing for composition.
@@ -319,6 +320,7 @@ function onBeforeInput(event: InputEvent, editor: LexicalEditor): void {
     const anchorNode = anchor.getNode();
     const focusNode = focus.getNode();
 
+    console.error('onBeforeInput',inputType, data)
     if (inputType === 'insertText') {
       if (data === '\n') {
         event.preventDefault();
@@ -441,16 +443,19 @@ function onBeforeInput(event: InputEvent, editor: LexicalEditor): void {
 }
 
 function onInput(event: InputEvent, editor: LexicalEditor): void {
+  console.warn('onInput')
   // We don't want the onInput to bubble, in the case of nested editors.
   event.stopPropagation();
   updateEditor(editor, () => {
     const selection = $getSelection();
     const data = event.data;
+    console.warn('$shouldPreventDefaultAndInsertText', $shouldPreventDefaultAndInsertText(selection, data, false))
     if (
       data != null &&
       $isRangeSelection(selection) &&
       $shouldPreventDefaultAndInsertText(selection, data, false)
     ) {
+      console.log('INSERT_TEXT_COMMAND', data);
       dispatchCommand(editor, INSERT_TEXT_COMMAND, data);
       // For Android
       if (editor._compositionKey !== null) {
@@ -691,7 +696,8 @@ export function addRootElementEvents(
                 case 'dragstart':
                   return dispatchCommand(editor, DRAGSTART_COMMAND, event);
                 case 'focus':
-                  return dispatchCommand(editor, FOCUS_COMMAND, event);
+                  return;
+                  // return dispatchCommand(editor, FOCUS_COMMAND, event);
                 case 'blur':
                   return dispatchCommand(editor, BLUR_COMMAND, event);
                 case 'drop':

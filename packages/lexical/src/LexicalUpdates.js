@@ -51,6 +51,11 @@ import {
   scheduleMicroTask,
 } from './LexicalUtils';
 
+const log = (...args) => {
+  return
+  console.log('LexicalUpdates',...args)
+}
+
 let activeEditorState: null | EditorState = null;
 let activeEditor: null | LexicalEditor = null;
 let isReadOnlyMode: boolean = false;
@@ -312,7 +317,7 @@ function handleDEVOnlyPendingUpdateGuarantees(
 }
 
 export function commitPendingUpdates(editor: LexicalEditor): void {
-  console.log('commitPendingUpdates');
+  console.trace('commitPendingUpdates');
   const pendingEditorState = editor._pendingEditorState;
   const rootElement = editor._rootElement;
   if (rootElement === null || pendingEditorState === null) {
@@ -322,6 +327,7 @@ export function commitPendingUpdates(editor: LexicalEditor): void {
   const currentSelection = currentEditorState._selection;
   const pendingSelection = pendingEditorState._selection;
   const needsUpdate = editor._dirtyType !== NO_DIRTY_NODES;
+  console.warn('commitPendingUpdates  => editor._pendingEditorState = null; editor._editorState = pendingEditorState;');
   editor._pendingEditorState = null;
   editor._editorState = pendingEditorState;
 
@@ -548,6 +554,7 @@ function beginUpdate(
   options?: EditorUpdateOptions,
 ): void {
   const updateTags = editor._updateTags;
+  console.warn('beginUpdate updateTags',updateTags)
   let onUpdate;
   let tag;
   let skipTransforms = false;
@@ -567,10 +574,15 @@ function beginUpdate(
   let pendingEditorState = editor._pendingEditorState;
   let editorStateWasCloned = false;
 
+  console.warn('beginUpdate pendingEditorState', pendingEditorState)
+  if(pendingEditorState !== null) {
+    console.error('beginUpdate pendingEditorState not cloned')
+  }
   if (pendingEditorState === null) {
     pendingEditorState = editor._pendingEditorState =
       cloneEditorState(currentEditorState);
     editorStateWasCloned = true;
+    console.warn('beginUpdate editor._pendingEditorState = cloneEditorState(currentEditorState);')
   }
 
   const previousActiveEditorState = activeEditorState;
@@ -633,6 +645,7 @@ function beginUpdate(
     // Report errors
     editor._onError(error);
     // Restore existing editor state to the DOM
+    console.error('editor._pendingEditorState = currentEditorState;')
     editor._pendingEditorState = currentEditorState;
     editor._dirtyType = FULL_RECONCILE;
     editor._cloneNotNeeded.clear();
@@ -651,7 +664,7 @@ function beginUpdate(
   const shouldUpdate =
     editor._dirtyType !== NO_DIRTY_NODES ||
     editorStateHasDirtySelection(pendingEditorState, editor);
-
+  console.error('shouldUpdate',shouldUpdate)
   if (shouldUpdate) {
     if (pendingEditorState._flushSync) {
       pendingEditorState._flushSync = false;
@@ -669,6 +682,7 @@ function beginUpdate(
       editor._pendingEditorState = null;
     }
   }
+  console.warn('beginUpdate end ====================================================================================================================')
 }
 
 export function updateEditor(
@@ -676,7 +690,9 @@ export function updateEditor(
   updateFn: () => void,
   options?: EditorUpdateOptions,
 ): void {
+  console.error('updateEditor')
   if (editor._updating) {
+    console.error('updateEditor -> editor._updating')
     editor._updates.push([updateFn, options]);
   } else {
     beginUpdate(editor, updateFn, options);

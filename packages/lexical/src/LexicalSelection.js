@@ -478,6 +478,7 @@ export class RangeSelection implements BaseSelection {
   format: number;
 
   constructor(anchor: PointType, focus: PointType, format: number): void {
+    console.error('new RangeSelection')
     this.anchor = anchor;
     this.focus = focus;
     this.dirty = false;
@@ -1655,6 +1656,9 @@ export class RangeSelection implements BaseSelection {
 }
 
 export function $isNodeSelection(x: ?mixed): boolean %checks {
+  if(x instanceof NodeSelection) {
+    console.error('$isNodeSelection')
+  }
   return x instanceof NodeSelection;
 }
 
@@ -1867,6 +1871,7 @@ function internalResolveSelectionPoints(
   editor: LexicalEditor,
   lastSelection: null | RangeSelection | NodeSelection | GridSelection,
 ): null | [PointType, PointType] {
+  console.error('internalResolveSelectionPoints')
   if (
     anchorDOM === null ||
     focusDOM === null ||
@@ -1962,6 +1967,7 @@ export function internalMakeRangeSelection(
   anchorType: 'text' | 'element',
   focusType: 'text' | 'element',
 ): RangeSelection {
+  console.warn('internalMakeRangeSelection')
   const editorState = getActiveEditorState();
   const selection = new RangeSelection(
     $createPoint(anchorKey, anchorOffset, anchorType),
@@ -2027,6 +2033,7 @@ function internalCreateRangeSelection(
 
   const eventType = getActiveEventType();
   const isSelectionChange = eventType === 'selectionchange';
+  console.log('isProcessingMutations',getIsProcesssingMutations())
   const useDOMSelection =
     !getIsProcesssingMutations() &&
     (isSelectionChange ||
@@ -2090,6 +2097,7 @@ export function $getPreviousSelection():
 export function internalCreateSelectionFromParse(
   parsedSelection: null | ParsedSelection,
 ): null | RangeSelection | NodeSelection | GridSelection {
+  console.error('internalCreateSelectionFromParse',parsedSelection)
   if (parsedSelection !== null) {
     if (parsedSelection.type === 'range') {
       return new RangeSelection(

@@ -767,6 +767,7 @@ export async function applySelectionInputs(inputs, update, editor) {
 }
 
 export function setAnchorPoint(point) {
+  console.error('setAnchorPoint')
   let selection = $getSelection();
   if (selection === null) {
     const dummyTextNode = $createTextNode();

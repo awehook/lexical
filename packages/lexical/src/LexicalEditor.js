@@ -238,6 +238,7 @@ export function createEditor<EditorContext>(editorConfig?: {
   readOnly?: boolean,
   theme?: EditorThemeClasses,
 }): LexicalEditor {
+  console.log('createEditor')
   const config = editorConfig || {};
   const namespace = config.namespace || createUID();
   const theme = config.theme || {};
@@ -283,6 +284,7 @@ export function createEditor<EditorContext>(editorConfig?: {
     isReadOnly,
   );
   if (initialEditorState !== undefined) {
+    console.warn('editor._pendingEditorState = initialEditorState;', initialEditorState)
     editor._pendingEditorState = initialEditorState;
     editor._dirtyType = FULL_RECONCILE;
   }
@@ -515,6 +517,7 @@ export class LexicalEditor {
     return this._key;
   }
   setRootElement(nextRootElement: null | HTMLElement): void {
+    console.log('setRootElement')
     const prevRootElement = this._rootElement;
     if (nextRootElement !== prevRootElement) {
       const pendingEditorState = this._pendingEditorState || this._editorState;
@@ -563,11 +566,13 @@ export class LexicalEditor {
     const tags = this._updateTags;
     const tag = options !== undefined ? options.tag : null;
     if (pendingEditorState !== null && !pendingEditorState.isEmpty()) {
+      console.warn('setEditorState pendingEditorState !== null && !pendingEditorState.isEmpty()')
       if (tag != null) {
         tags.add(tag);
       }
       commitPendingUpdates(this);
     }
+    console.warn('setEditorState this._pendingEditorState = editorState;')
     this._pendingEditorState = editorState;
     this._dirtyType = FULL_RECONCILE;
     this._compositionKey = null;
