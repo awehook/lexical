@@ -718,7 +718,7 @@ export function updateEditorState(
     const dirtyElements = editor._dirtyElements;
     const dirtyLeaves = editor._dirtyLeaves;
 
-    console.trace('observer.disconnect')
+    console.warn('observer.disconnect')
     observer.disconnect();
     try {
       reconcileMutatedNodes = reconcileRoot(

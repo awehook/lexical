@@ -197,6 +197,7 @@ export function $isLeafNode(node: ?LexicalNode): boolean %checks {
 }
 
 export function $setNodeKey(node: LexicalNode, existingKey: ?NodeKey): void {
+  console.warn('$setNodeKey')
   if (existingKey != null) {
     node.__key = existingKey;
     return;
@@ -286,6 +287,7 @@ export function internalMarkSiblingsAsDirty(node: LexicalNode) {
 }
 
 export function $setCompositionKey(compositionKey: null | NodeKey): void {
+  console.warn('$setCompositionKey');
   errorOnReadOnly();
   const editor = getActiveEditor();
   const previousCompositionKey = editor._compositionKey;

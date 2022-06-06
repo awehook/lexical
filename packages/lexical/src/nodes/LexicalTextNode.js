@@ -475,6 +475,7 @@ export class TextNode extends LexicalNode {
 
   setMode(type: TextModeType): this {
     errorOnReadOnly();
+    console.warn('setMode', type)
     const mode = TEXT_MODE_TO_TYPE[type];
     const self = this.getWritable();
     self.__mode = mode;

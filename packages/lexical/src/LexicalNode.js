@@ -212,6 +212,7 @@ export class LexicalNode {
       }
       nodeKey = node.__parent;
     }
+    console.log('not attached')
     return false;
   }
 
