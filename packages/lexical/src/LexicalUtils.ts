@@ -1078,6 +1078,7 @@ export function dispatchCommand<P>(
   type: LexicalCommand<P>,
   payload: P,
 ): boolean {
+  console.warn('dispatchCommand')
   return triggerCommandListeners(editor, type, payload);
 }
 

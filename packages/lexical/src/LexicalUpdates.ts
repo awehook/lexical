@@ -867,9 +867,11 @@ function beginUpdate(
   if (shouldUpdate) {
     if (pendingEditorState._flushSync) {
       pendingEditorState._flushSync = false;
+      console.log(1)
       commitPendingUpdates(editor);
     } else if (editorStateWasCloned) {
       scheduleMicroTask(() => {
+        console.log(2)
         commitPendingUpdates(editor);
       });
     }

@@ -22,14 +22,22 @@ import {PlainTextPlugin} from '@lexical/react/LexicalPlainTextPlugin';
 import {RichTextPlugin} from '@lexical/react/LexicalRichTextPlugin';
 import {TablePlugin} from '@lexical/react/LexicalTablePlugin';
 import {$createHeadingNode, $createQuoteNode} from '@lexical/rich-text';
-import {$createParagraphNode, $createTextNode, $getRoot} from 'lexical';
+import {
+  $createParagraphNode,
+  $createTextNode,
+  $getRoot,
+  $getSelection,
+  COMMAND_PRIORITY_CRITICAL,
+  KEY_ENTER_COMMAND
+} from 'lexical';
 import * as React from 'react';
-import {useRef} from 'react';
+import {useEffect, useRef} from 'react';
 
 import {createWebsocketProvider} from './collaboration';
 import {useSettings} from './context/SettingsContext';
 import {useSharedHistoryContext} from './context/SharedHistoryContext';
 import ActionsPlugin from './plugins/ActionsPlugin';
+import SlashMenuPlugin from './plugins/ASlashMenuPlugin';
 import AutocompletePlugin from './plugins/AutocompletePlugin';
 import AutoLinkPlugin from './plugins/AutoLinkPlugin';
 import CharacterStylesPopupPlugin from './plugins/CharacterStylesPopupPlugin';
@@ -57,12 +65,23 @@ import TwitterPlugin from './plugins/TwitterPlugin';
 import YouTubePlugin from './plugins/YouTubePlugin';
 import ContentEditable from './ui/ContentEditable';
 import Placeholder from './ui/Placeholder';
+import {useLexicalComposerContext} from "@lexical/react/LexicalComposerContext";
+import getSelection from "shared/getDOMSelection";
 
 const skipCollaborationInit =
   // @ts-ignore
   window.parent != null && window.parent.frames.right === window;
 
 function prepopulatedRichText() {
+  const root = $getRoot();
+  if (root.getFirstChild() === null) {
+    const heading = $createHeadingNode('h1');
+    heading.append($createTextNode('Welcome to the playground'));
+    root.append(heading);
+  }
+}
+
+function prepopulatedRichText2() {
   const root = $getRoot();
   if (root.getFirstChild() === null) {
     const heading = $createHeadingNode('h1');
@@ -163,6 +182,28 @@ export default function Editor(): JSX.Element {
     : 'Enter some plain text...';
   const placeholder = <Placeholder>{text}</Placeholder>;
   const scrollRef = useRef(null);
+  const [ editor] = useLexicalComposerContext()
+  useEffect(()=> {
+    // editor.registerCommand<KeyboardEvent>(KEY_ENTER_COMMAND,(event)=>{
+    //   event.preventDefault()
+    //   return true
+    // },COMMAND_PRIORITY_CRITICAL)
+    editor.registerUpdateListener(({editorState})=>{
+      //@ts-ignore
+      // console.log(editorState.toJSON())
+      editorState.read(()=>{
+        const selection = $getSelection()
+        console.log(selection)
+        if(selection) {
+          const nodes = selection.getNodes()
+          console.log(nodes)
+          if(nodes.length === 0) {
+            console.error('nodes empty')
+          }
+        }
+      })
+    })
+  })
 
   return (
     <>
@@ -235,6 +276,7 @@ export default function Editor(): JSX.Element {
         )}
         {isAutocomplete && <AutocompletePlugin />}
         <ActionsPlugin isRichText={isRichText} />
+        <SlashMenuPlugin />
       </div>
       {showTreeView && <TreeViewPlugin />}
     </>

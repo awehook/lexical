@@ -1396,6 +1396,10 @@ button.action-button:disabled {
   background-image: url(images/icons/x-lg.svg);
 }
 
+.slash-menu-popup {
+
+}
+
 .character-style-popup {
   display: flex;
   margin-bottom: 1px;

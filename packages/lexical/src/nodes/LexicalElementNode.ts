@@ -317,6 +317,7 @@ export class ElementNode extends LexicalNode {
     deleteCount: number,
     nodesToInsert: Array<LexicalNode>,
   ): this {
+    console.log('splice',{node:this, start, deleteCount, nodesToInsert})
     errorOnReadOnly();
     const writableSelf = this.getWritable();
     const writableSelfKey = writableSelf.__key;

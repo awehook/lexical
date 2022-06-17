@@ -339,6 +339,7 @@ function $canRemoveText(
 }
 
 function onBeforeInput(event: InputEvent, editor: LexicalEditor): void {
+  console.warn('onBeforeInput')
   const inputType = event.inputType;
 
   // We let the browser do its own thing for composition.
@@ -598,6 +599,7 @@ function onBeforeInput(event: InputEvent, editor: LexicalEditor): void {
 }
 
 function onInput(event: InputEvent, editor: LexicalEditor): void {
+  console.warn('onInput')
   // We don't want the onInput to bubble, in the case of nested editors.
   event.stopPropagation();
   updateEditor(editor, () => {
